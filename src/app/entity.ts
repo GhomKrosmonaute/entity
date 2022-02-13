@@ -1,12 +1,4 @@
-export type EntityEventName =
-  | "setup"
-  | "draw"
-  | "update"
-  | "teardown"
-  | "mousePressed"
-  | "mouseReleased"
-  | "keyPressed"
-  | "keyReleased"
+export type EntityEventName = "setup" | "update" | "teardown"
 
 export type EntityListener<This extends Entity> = (
   this: This,
@@ -16,19 +8,9 @@ export type EntityListener<This extends Entity> = (
 export class Entity {
   protected _isSetup = false
   protected _children = new Set<Entity>()
-  protected _zIndex?: number
   protected _parent?: Entity
   protected _listeners: EntityListener<this>[] = []
-  protected _stopPoints: Record<EntityEventName, boolean> = {
-    setup: false,
-    draw: false,
-    update: false,
-    teardown: false,
-    keyPressed: false,
-    keyReleased: false,
-    mousePressed: false,
-    mouseReleased: false,
-  }
+  protected _stopPoints: Partial<Record<EntityEventName, boolean>> = {}
 
   get isSetup() {
     return this._isSetup
@@ -36,10 +18,6 @@ export class Entity {
 
   get children(): Array<Entity> {
     return [...this._children]
-  }
-
-  get zIndex(): number {
-    return this._zIndex ?? this.parent?.children.indexOf(this) ?? 0
   }
 
   get parent(): Entity | undefined {
@@ -59,37 +37,12 @@ export class Entity {
   /**
    * Used to be overwritten by your own workings
    */
-  onDraw() {}
-
-  /**
-   * Used to be overwritten by your own workings
-   */
   onUpdate() {}
 
   /**
    * Used to be overwritten by your own workings
    */
   onTeardown() {}
-
-  /**
-   * Used to be overwritten by your own workings
-   */
-  onMouseReleased() {}
-
-  /**
-   * Used to be overwritten by your own workings
-   */
-  onMousePressed() {}
-
-  /**
-   * Used to be overwritten by your own workings
-   */
-  onKeyReleased() {}
-
-  /**
-   * Used to be overwritten by your own workings
-   */
-  onKeyPressed() {}
 
   /**
    * Should only be called if the current entity is a root.
@@ -102,19 +55,6 @@ export class Entity {
       this._isSetup = true
     } else {
       throw new Error("Entity is already setup")
-    }
-  }
-
-  /**
-   * Should only be called if the current entity is a root.
-   * Should not be overwritten!
-   */
-  public draw() {
-    if (this.isSetup) {
-      this.onDraw()
-      this.transmit("draw")
-    } else {
-      console.warn("Draw is called before setup")
     }
   }
 
@@ -143,58 +83,6 @@ export class Entity {
       this.transmit("teardown")
     } else {
       throw new Error("Entity must be setup before")
-    }
-  }
-
-  /**
-   * Should only be called if the current entity is a root.
-   * Should not be overwritten!
-   */
-  public mousePressed() {
-    if (this.isSetup) {
-      this.onMousePressed()
-      this.transmit("mousePressed")
-    } else {
-      console.warn("mousePressed is called before setup")
-    }
-  }
-
-  /**
-   * Should only be called if the current entity is a root.
-   * Should not be overwritten!
-   */
-  public mouseReleased() {
-    if (this.isSetup) {
-      this.onMouseReleased()
-      this.transmit("mouseReleased")
-    } else {
-      console.warn("mousePressed is called before setup")
-    }
-  }
-
-  /**
-   * Should only be called if the current entity is a root.
-   * Should not be overwritten!
-   */
-  public keyPressed() {
-    if (this.isSetup) {
-      this.onKeyPressed()
-      this.transmit("keyPressed")
-    } else {
-      console.warn("keyPressed is called before setup")
-    }
-  }
-
-  /**
-   * Should only be called if the current entity is a root.
-   * Should not be overwritten!
-   */
-  public keyReleased() {
-    if (this.isSetup) {
-      this.onKeyReleased()
-      this.transmit("keyReleased")
-    } else {
-      console.warn("keyReleased is called before setup")
     }
   }
 
@@ -231,15 +119,7 @@ export class Entity {
     for (const listener of this.getListenersByName(name))
       listener.bind(this)(this)
 
-    let children =
-      name === "mouseReleased" ||
-      name === "mousePressed" ||
-      name === "keyPressed" ||
-      name === "keyReleased"
-        ? this.children.sort((a, b) => a.zIndex - b.zIndex)
-        : this.children.sort((a, b) => b.zIndex - a.zIndex)
-
-    for (const child of children) {
+    for (const child of this.children) {
       if (this._stopPoints[name]) {
         this._stopPoints[name] = false
         return
