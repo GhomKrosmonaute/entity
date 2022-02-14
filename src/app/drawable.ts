@@ -1,8 +1,14 @@
+import * as p5 from "p5"
 import { Entity } from "./entity"
 
 export interface DrawableSettings {
   fill: false | FillOptions
   stroke: false | StrokeOptions
+  textSize?: number
+  textAlign?: {
+    x?: p5.HORIZ_ALIGN
+    y?: p5.VERT_ALIGN
+  }
 }
 
 export abstract class Drawable extends Entity {
@@ -28,6 +34,18 @@ export abstract class Drawable extends Entity {
       stroke(this.settings.stroke.color)
     } else {
       noStroke()
+    }
+
+    if (this.settings.textAlign) {
+      textAlign(this.settings.textAlign.x, this.settings.textAlign.y)
+    } else {
+      textAlign(CENTER, CENTER)
+    }
+
+    if (this.settings.textSize) {
+      textSize(this.settings.textSize)
+    } else {
+      textSize(height * 0.1)
     }
   }
 }

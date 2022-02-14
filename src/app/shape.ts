@@ -172,3 +172,50 @@ export class Image extends Rect {
     image(this.img, this.x, this.y, this.width, this.height)
   }
 }
+
+export class Text extends Shape {
+  constructor(
+    public text = "",
+    public x = 0,
+    public y = 0,
+    public _width?: number,
+    public _height?: number,
+    options?: DrawableSettings
+  ) {
+    super(options)
+  }
+
+  get width(): number {
+    return this._width ?? Infinity
+  }
+
+  get height(): number {
+    return this._height ?? Infinity
+  }
+
+  get centerX() {
+    return this.settings.textAlign.x === CENTER
+      ? this.x
+      : this.x + this.width / 2
+  }
+
+  get centerY() {
+    return this.settings.textAlign.y === CENTER
+      ? this.y
+      : this.y + this.height / 2
+  }
+
+  get isHovered(): boolean {
+    return (
+      mouseX > this.centerX - width / 10 &&
+      mouseX < this.centerX + width / 10 &&
+      mouseY > this.centerY - height / 10 &&
+      mouseY < this.centerX + height / 10
+    )
+  }
+
+  onDraw() {
+    super.onDraw()
+    text(this.text, this.x, this.y, this._width, this._height)
+  }
+}
