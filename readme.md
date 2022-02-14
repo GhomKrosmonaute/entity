@@ -1,99 +1,59 @@
-# Entity p5
+# Entity
 
-TypeScript only package for entity based app using p5.js
+TypeScript only package for entity based state machine
 
 ## Library usage
 
-### Startup example
-
-The following Rect instance extends Entity
-
 ```ts
 // TypeScript
-import { Entity, Rect } from "entity-p5"
+import { Entity } from "@ghom/entity"
 
 /**
  * It is recommended to isolate root entity in another file to be able to import it wherever you want
  */
 const root = new Entity
 
-function setup() {
-  const myRect = new Rect(
-    x, y,
-    width,
-    height,
-    {
-      stroke: false,
-      fill: color("red")
-    }
-  )
-  
-  // add my rect to root entity children.
-  // my rect will drawn/setup/update/teardown at same time of root.
-  root.addChild(myRect)
-  
-  root.setup()
+root.addChild(new Entity)
+root.addChild(new Entity)
+
+root.setup()
+
+console.log(root.schema())
+
+function update() {
+  root.update()
+  requestAnimationFrame(update)
 }
 
-function draw() {
-  root.update()
-  root.draw()
-}
+requestAnimationFrame(update)
 ```
 
 ### Example with heritage
 
-The following class uses the onDraw method of her parent.  
-The onDraw method is already implemented in some entities. 
-
 ```ts
 // TypeScript
-import { Entity, Circle } from "entity-p5"
+import { Entity } from "@ghom/entity"
 
 /**
- * Juste a clickable balloon that teleports
+ * Just a cool entity
  */
-export class ClickableBalloon extends Circle {
-  constructor() {
-    super(random(0, width), random(0, height), random(40, 60), {
-      fill: color(random(100, 200), random(100, 200), random(100, 200)),
-      stroke: false,
-    })
-  }
-
+export class CoolEntity extends Entity {
   onUpdate() {
-    if (this.isHovered) {
-      this.settings.stroke = {
-        color: color(255),
-        weight: 5,
-      }
-    } else {
-      this.settings.stroke = false
-    }
-  }
-
-  onMouseReleased() {
-    if (this.isHovered) {
-      if (this.parent.children.length > 1)
-        this.parent.stopTransmission("mouseReleased")
-
-      this.parent.addChild(new Balloon())
-      this.teardown()
-    }
+    console.log("cool!")
   }
 }
 
 /**
  * It is an Entity used as container containing other entities
  */
-export class Balloons extends Entity {
+export class CoolContainer extends Entity {
   constructor(private count: number) {
     super()
   }
 
   onSetup() {
     for (let i = 0; i < this.count; i++) {
-      this.addChild(new Balloon())
+      this.addChild(new CoolEntity)
     }
   }
 }
