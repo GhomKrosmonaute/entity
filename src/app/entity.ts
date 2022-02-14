@@ -11,10 +11,15 @@ export type EntityEventName =
   | "keyReleased"
 
 export class Entity extends Base<EntityEventName> {
+  protected _children = new Set<Entity>()
   protected _zIndex?: number
 
   get zIndex(): number {
     return this._zIndex ?? this.parent?.children.indexOf(this) ?? 0
+  }
+
+  get children(): Array<Entity> {
+    return [...this._children]
   }
 
   /**

@@ -1,11 +1,11 @@
-import * as entity from "./entity"
+import { Entity } from "./entity"
 
 export interface DrawableSettings {
   fill: false | FillOptions
   stroke: false | StrokeOptions
 }
 
-export abstract class Drawable extends entity.Entity {
+export abstract class Drawable extends Entity {
   protected constructor(protected settings?: DrawableSettings) {
     super()
   }
