@@ -1,26 +1,27 @@
 export type EntityEventName = "setup" | "update" | "teardown"
 
-export type EntityListener<This extends Entity> = (
-  this: This,
-  it: This
-) => unknown
+export type EntityListener<
+  EventName extends string,
+  This extends Base<EventName>
+> = (this: This, it: This) => unknown
 
-export class Entity {
+export class Base<EventName extends string> {
   protected _isSetup = false
-  protected _children = new Set<Entity>()
-  protected _parent?: Entity
-  protected _listeners: EntityListener<this>[] = []
-  protected _stopPoints: Partial<Record<EntityEventName, boolean>> = {}
+  protected _children = new Set<Base<EventName | EntityEventName>>()
+  protected _parent?: Base<EventName | EntityEventName>
+  protected _listeners: EntityListener<EventName | EntityEventName, this>[] = []
+  protected _stopPoints: Partial<Record<EventName | EntityEventName, boolean>> =
+    {}
 
   get isSetup() {
     return this._isSetup
   }
 
-  get children(): Array<Entity> {
+  get children(): Array<Base<EventName | EntityEventName>> {
     return [...this._children]
   }
 
-  get parent(): Entity | undefined {
+  get parent(): Base<EventName | EntityEventName> | undefined {
     return this._parent
   }
 
@@ -86,7 +87,7 @@ export class Entity {
     }
   }
 
-  public on(name: EntityEventName, listener: EntityListener<this>) {
+  public on(name: EventName, listener: EntityListener<EventName, this>) {
     this._listeners.push(
       {
         [name]() {
@@ -96,7 +97,7 @@ export class Entity {
     )
   }
 
-  public addChild(...children: Entity[]) {
+  public addChild(...children: Base<EventName>[]) {
     for (const child of children) {
       child._parent = this
       this._children.add(child)
@@ -104,18 +105,18 @@ export class Entity {
     }
   }
 
-  public removeChild(...children: Entity[]) {
+  public removeChild(...children: Base<EventName>[]) {
     for (const child of children) {
       if (child.isSetup) child.teardown()
       else this._children.delete(child)
     }
   }
 
-  public stopTransmission(name: EntityEventName) {
+  public stopTransmission(name: EventName | EntityEventName) {
     this._stopPoints[name] = true
   }
 
-  private transmit(name: EntityEventName) {
+  private transmit(name: EventName | EntityEventName) {
     for (const listener of this.getListenersByName(name))
       listener.bind(this)(this)
 
@@ -125,11 +126,12 @@ export class Entity {
         return
       }
 
+      // @ts-ignore
       child[name]()
     }
   }
 
-  private getListenersByName(name: EntityEventName) {
+  private getListenersByName(name: EventName | EntityEventName) {
     return this._listeners.filter((listener) => {
       return listener.name === name
     })
