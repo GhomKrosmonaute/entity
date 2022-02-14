@@ -1,3 +1,5 @@
+import { Entity as Base } from "@ghom/entity-base"
+
 export type EntityEventName =
   | "setup"
   | "draw"
@@ -13,11 +15,9 @@ export type EntityListener<This extends Entity> = (
   it: This
 ) => unknown
 
-export class Entity {
+export class Entity extends Base<EntityEventName> {
   protected _isSetup = false
-  protected _children = new Set<Entity>()
   protected _zIndex?: number
-  protected _parent?: Entity
   protected _listeners: EntityListener<this>[] = []
   protected _stopPoints: Record<EntityEventName, boolean> = {
     setup: false,
