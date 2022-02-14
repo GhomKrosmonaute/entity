@@ -112,7 +112,7 @@ export class Entity extends Base<EntityEventName> {
     }
   }
 
-  protected transmit(name: EntityEventName) {
+  public transmit(name: EntityEventName) {
     for (const listener of this.getListenersByName(name))
       listener.bind(this)(this)
 
