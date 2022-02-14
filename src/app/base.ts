@@ -5,7 +5,7 @@ export type EntityListener<
   This extends Base<EventName>
 > = (this: This, it: This) => unknown
 
-export class Base<EventName extends string> {
+export abstract class Base<EventName extends string> {
   protected _isSetup = false
   protected _children = new Set<Base<EventName | EntityEventName>>()
   protected _parent?: Base<EventName | EntityEventName>
@@ -28,7 +28,7 @@ export class Base<EventName extends string> {
   /**
    * Represent any state-based entity
    */
-  constructor() {}
+  protected constructor() {}
 
   /**
    * Used to be overwritten by your own workings
@@ -112,11 +112,11 @@ export class Base<EventName extends string> {
     }
   }
 
-  protected stopTransmission(name: EventName | EntityEventName) {
+  public stopTransmission(name: EventName | EntityEventName) {
     this._stopPoints[name] = true
   }
 
-  protected transmit(name: EventName | EntityEventName) {
+  public transmit(name: EventName | EntityEventName) {
     for (const listener of this.getListenersByName(name))
       listener.bind(this)(this)
 
@@ -131,7 +131,7 @@ export class Base<EventName extends string> {
     }
   }
 
-  protected getListenersByName(name: EventName | EntityEventName) {
+  public getListenersByName(name: EventName | EntityEventName) {
     return this._listeners.filter((listener) => {
       return listener.name === name
     })
