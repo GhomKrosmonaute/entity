@@ -1,3 +1,7 @@
 export * from "./app/entity"
 export * from "./app/drawable"
+export * from "./app/animation"
+export * from "./app/easing"
+export * from "./app/time"
+export * from "./app/gate"
 export * from "./app/shape"
