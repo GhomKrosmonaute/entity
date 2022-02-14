@@ -112,11 +112,11 @@ export class Base<EventName extends string> {
     }
   }
 
-  public stopTransmission(name: EventName | EntityEventName) {
+  protected stopTransmission(name: EventName | EntityEventName) {
     this._stopPoints[name] = true
   }
 
-  private transmit(name: EventName | EntityEventName) {
+  protected transmit(name: EventName | EntityEventName) {
     for (const listener of this.getListenersByName(name))
       listener.bind(this)(this)
 
@@ -131,7 +131,7 @@ export class Base<EventName extends string> {
     }
   }
 
-  private getListenersByName(name: EventName | EntityEventName) {
+  protected getListenersByName(name: EventName | EntityEventName) {
     return this._listeners.filter((listener) => {
       return listener.name === name
     })
