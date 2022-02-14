@@ -10,6 +10,7 @@ export interface AnimationSettings {
   duration: number
   easing?: EasingFunction
   onSetup?: () => unknown
+  onDraw?: (value: number) => unknown
   onUpdate?: (value: number) => unknown
   onTeardown?: () => unknown
 }
@@ -29,6 +30,20 @@ export class Animation extends Time {
     this.settings.onSetup?.()
     super.onSetup()
     this.settings.onUpdate?.(this.settings.from)
+  }
+
+  onDraw() {
+    this.settings.onDraw?.(
+      map(
+        this.settings.easing(
+          (frameCount - this.startedAt) / this.settings.duration
+        ),
+        0,
+        1,
+        this.settings.from,
+        this.settings.to
+      )
+    )
   }
 
   onUpdate() {
