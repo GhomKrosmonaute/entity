@@ -1,3 +1,4 @@
+import * as p5 from "p5"
 import { Drawable, DrawableSettings } from "./drawable"
 
 export abstract class Shape
@@ -151,5 +152,23 @@ export class Line extends Shape {
   onDraw() {
     super.onDraw()
     line(this.x, this.y, this.x2, this.y2)
+  }
+}
+
+export class Image extends Rect {
+  constructor(
+    public img: p5.Image,
+    public x = 0,
+    public y = 0,
+    width?: number,
+    height?: number,
+    options?: DrawableSettings
+  ) {
+    super(x, y, width ?? img.width, height ?? img.height, options)
+  }
+
+  onDraw() {
+    super.onDraw()
+    image(this.img, this.x, this.y, this.width, this.height)
   }
 }
