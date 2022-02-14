@@ -4,6 +4,8 @@ TypeScript only package for entity based app using p5.js
 
 ## Library usage
 
+Start from templte ? https://github.com/ESBuildTemplates/entity-p5.ts (recommended)
+
 ### Startup example
 
 The following Rect instance extends Entity
