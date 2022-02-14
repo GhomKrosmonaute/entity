@@ -10,7 +10,7 @@ The following Rect instance extends Entity
 
 ```ts
 // TypeScript
-import { Entity, Rect } from "entity-p5"
+import { Entity, Rect } from "@ghom/entity-p5"
 
 /**
  * It is recommended to isolate root entity in another file to be able to import it wherever you want
@@ -48,7 +48,7 @@ The onDraw method is already implemented in some entities.
 
 ```ts
 // TypeScript
-import { Entity, Circle } from "entity-p5"
+import { Entity, Circle } from "@ghom/entity-p5"
 
 /**
  * Juste a clickable balloon that teleports
