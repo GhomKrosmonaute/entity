@@ -19,7 +19,7 @@ export interface AnimationSettings {
  * Equivalent of Tween
  */
 export class Animation extends Time {
-  private easing: EasingFunction
+  private readonly easing: EasingFunction
 
   constructor(private settings: AnimationSettings) {
     super()
@@ -35,9 +35,7 @@ export class Animation extends Time {
   onDraw() {
     this.settings.onDraw?.(
       map(
-        this.settings.easing(
-          (frameCount - this.startedAt) / this.settings.duration
-        ),
+        this.easing((frameCount - this.startedAt) / this.settings.duration),
         0,
         1,
         this.settings.from,
@@ -52,9 +50,7 @@ export class Animation extends Time {
     } else {
       this.settings.onUpdate?.(
         map(
-          this.settings.easing(
-            (frameCount - this.startedAt) / this.settings.duration
-          ),
+          this.easing((frameCount - this.startedAt) / this.settings.duration),
           0,
           1,
           this.settings.from,
