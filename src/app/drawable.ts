@@ -19,6 +19,8 @@ export abstract class Drawable extends Entity {
       } else {
         fill(this.settings.fill)
       }
+    } else {
+      noFill()
     }
 
     if (this.settings.stroke) {
