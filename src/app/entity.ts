@@ -10,7 +10,13 @@ export type EntityEventName =
   | "keyPressed"
   | "keyReleased"
 
+export type EntityResolvable = Entity | (() => Entity)
+
 export class Entity extends Base<EntityEventName> {
+  static resolve(entity: EntityResolvable) {
+    return typeof entity === "function" ? entity() : entity
+  }
+
   protected _children = new Set<Entity>()
   protected _zIndex?: number
 
