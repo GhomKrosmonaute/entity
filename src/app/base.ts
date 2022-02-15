@@ -144,9 +144,13 @@ export abstract class Base<EventName extends string> {
   ): string {
     return `${" ".repeat(indentation).repeat(depth)}${
       index === null ? "" : `${index} - `
-    }${this.constructor.name} [${this.isSetup ? "on" : "off"}]${
+    }${this.constructor.name}${
       this._children.size > 0
-        ? `:\n${this.children
+        ? ` (children: ${this.children.length})${
+            this._listeners.length > 0
+              ? ` (listeners: ${this._listeners.length})`
+              : ""
+          }\n${this.children
             .map(
               (child, index) => `${child.schema(indentation, depth + 1, index)}`
             )
