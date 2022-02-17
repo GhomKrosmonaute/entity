@@ -1,11 +1,8 @@
-export type EntityListener<This extends Entity> = (
-  this: This,
-  it: This
-) => unknown
+import { BaseEventNames, EventEmitter, Listener } from "@ghom/event-emitter"
 
 export type EntityResolvable = Entity | (() => Entity)
 
-export abstract class Entity {
+export abstract class Entity extends EventEmitter {
   static frameCount = 0
   static resolve(entity: EntityResolvable) {
     return typeof entity === "function" ? entity() : entity
@@ -15,7 +12,6 @@ export abstract class Entity {
   protected _isSetup = false
   protected _children = new Set<Entity>()
   protected _parent?: Entity
-  protected _listeners: EntityListener<this>[] = []
   protected _stopPoints: Record<string, boolean> = {}
 
   get frameCount() {
@@ -94,16 +90,6 @@ export abstract class Entity {
     }
   }
 
-  public on(name: string, listener: EntityListener<this>) {
-    this._listeners.push(
-      {
-        [name]() {
-          listener.bind(this)(this)
-        },
-      }[name].bind(this)
-    )
-  }
-
   public addChild(...children: Entity[]) {
     for (const child of children) {
       child._parent = this
@@ -124,8 +110,7 @@ export abstract class Entity {
   }
 
   public transmit(name: string) {
-    for (const listener of this.getListenersByName(name))
-      listener.bind(this)(this)
+    this.emit(name, [], this)
 
     for (const child of this.children) {
       if (this._stopPoints[name]) {
@@ -136,12 +121,6 @@ export abstract class Entity {
       // @ts-ignore
       if (name in child && typeof child[name] === "function") child[name]()
     }
-  }
-
-  public getListenersByName(name: string) {
-    return this._listeners.filter((listener) => {
-      return listener.name === name
-    })
   }
 
   public schema(

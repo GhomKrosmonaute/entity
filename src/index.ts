@@ -1,3 +1,4 @@
+export * from "@ghom/event-emitter"
 export * from "./app/animation"
 export * from "./app/easing"
 export * from "./app/entity"
