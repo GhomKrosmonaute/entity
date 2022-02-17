@@ -1,14 +1,7 @@
 import { Entity } from "@ghom/entity-base"
 
 export class Base extends Entity {
-  protected _children = new Set<Entity>()
   protected _zIndex?: number
-
-  constructor() {
-    super()
-
-    this.on("teardown", () => this.stopTransmission("draw"))
-  }
 
   get zIndex(): number {
     return this._zIndex ?? this.parent?.children.indexOf(this) ?? 0
@@ -17,7 +10,7 @@ export class Base extends Entity {
   /**
    * Used to be overwritten by your own workings
    */
-  onDraw() {}
+  onDraw(): boolean | void {}
 
   /**
    * Used to be overwritten by your own workings
@@ -45,10 +38,9 @@ export class Base extends Entity {
    */
   public draw() {
     if (this.isSetup) {
-      this.onDraw()
-      this.transmit("draw")
+      if (this.onDraw() !== false) this.transmit("draw")
     } else {
-      throw new Error(`draw is called before setup in ${this.constructor.name}`)
+      console.warn(`draw is called before setup in ${this.constructor.name}`)
     }
   }
 
@@ -61,7 +53,7 @@ export class Base extends Entity {
       this.onMousePressed()
       this.transmit("mousePressed")
     } else {
-      throw new Error(
+      console.warn(
         `mousePressed is called before setup in ${this.constructor.name}`
       )
     }
@@ -76,7 +68,7 @@ export class Base extends Entity {
       this.onMouseReleased()
       this.transmit("mouseReleased")
     } else {
-      throw new Error(
+      console.warn(
         `mouseReleased is called before setup in ${this.constructor.name}`
       )
     }
@@ -91,7 +83,7 @@ export class Base extends Entity {
       this.onKeyPressed()
       this.transmit("keyPressed")
     } else {
-      throw new Error(
+      console.warn(
         `keyPressed is called before setup in ${this.constructor.name}`
       )
     }
@@ -106,7 +98,7 @@ export class Base extends Entity {
       this.onKeyReleased()
       this.transmit("keyReleased")
     } else {
-      throw new Error(
+      console.warn(
         `keyReleased is called before setup in ${this.constructor.name}`
       )
     }
