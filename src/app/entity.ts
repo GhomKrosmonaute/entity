@@ -1,27 +1,32 @@
-export type EntityEventName = "setup" | "update" | "teardown"
+export type EntityListener<This extends Entity> = (
+  this: This,
+  it: This
+) => unknown
 
-export type EntityListener<
-  EventName extends string,
-  This extends Base<EventName>
-> = (this: This, it: This) => unknown
+export type EntityResolvable = Entity | (() => Entity)
 
-export abstract class Base<EventName extends string> {
+export abstract class Entity {
+  static frameCount = 0
+  static resolve(entity: EntityResolvable) {
+    return typeof entity === "function" ? entity() : entity
+  }
+
+  protected _startFrame = 0
   protected _isSetup = false
-  protected _children = new Set<Base<EventName | EntityEventName>>()
-  protected _parent?: Base<EventName | EntityEventName>
-  protected _listeners: EntityListener<EventName | EntityEventName, this>[] = []
-  protected _stopPoints: Partial<Record<EventName | EntityEventName, boolean>> =
-    {}
+  protected _children = new Set<Entity>()
+  protected _parent?: Entity
+  protected _listeners: EntityListener<this>[] = []
+  protected _stopPoints: Record<string, boolean> = {}
 
   get isSetup() {
     return this._isSetup
   }
 
-  get children(): Array<Base<EventName | EntityEventName>> {
+  get children(): Array<Entity> {
     return [...this._children]
   }
 
-  get parent(): Base<EventName | EntityEventName> | undefined {
+  get parent(): Entity | undefined {
     return this._parent
   }
 
@@ -50,6 +55,7 @@ export abstract class Base<EventName extends string> {
    * Should not be overwritten!
    */
   public setup() {
+    this._startFrame = Entity.frameCount
     if (!this.isSetup) {
       this.onSetup()
       this.transmit("setup")
@@ -64,6 +70,7 @@ export abstract class Base<EventName extends string> {
    * Should not be overwritten!
    */
   public update() {
+    Entity.frameCount++
     if (this.isSetup) {
       this.onUpdate()
       this.transmit("update")
@@ -87,7 +94,7 @@ export abstract class Base<EventName extends string> {
     }
   }
 
-  public on(name: EventName, listener: EntityListener<EventName, this>) {
+  public on(name: string, listener: EntityListener<this>) {
     this._listeners.push(
       {
         [name]() {
@@ -97,7 +104,7 @@ export abstract class Base<EventName extends string> {
     )
   }
 
-  public addChild(...children: Base<EventName>[]) {
+  public addChild(...children: Entity[]) {
     for (const child of children) {
       child._parent = this
       this._children.add(child)
@@ -105,18 +112,18 @@ export abstract class Base<EventName extends string> {
     }
   }
 
-  public removeChild(...children: Base<EventName>[]) {
+  public removeChild(...children: Entity[]) {
     for (const child of children) {
       if (child.isSetup) child.teardown()
       else this._children.delete(child)
     }
   }
 
-  public stopTransmission(name: EventName | EntityEventName) {
+  public stopTransmission(name: string) {
     this._stopPoints[name] = true
   }
 
-  public transmit(name: EventName | EntityEventName) {
+  public transmit(name: string) {
     for (const listener of this.getListenersByName(name))
       listener.bind(this)(this)
 
@@ -127,11 +134,11 @@ export abstract class Base<EventName extends string> {
       }
 
       // @ts-ignore
-      child[name]()
+      if (name in child && typeof child[name] === "function") child[name]()
     }
   }
 
-  public getListenersByName(name: EventName | EntityEventName) {
+  public getListenersByName(name: string) {
     return this._listeners.filter((listener) => {
       return listener.name === name
     })
