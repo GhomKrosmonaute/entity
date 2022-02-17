@@ -1,5 +1,5 @@
 import * as p5 from "p5"
-import { Entity } from "@ghom/entity-base"
+import { Base } from "./base"
 
 export interface DrawableSettings {
   fill: false | FillOptions
@@ -11,12 +11,12 @@ export interface DrawableSettings {
   }
 }
 
-export abstract class Drawable extends Entity {
+export abstract class Drawable extends Base {
   protected constructor(protected settings?: DrawableSettings) {
     super()
   }
 
-  onSetup() {
+  onDraw() {
     if (!this.settings) return
 
     if (this.settings.fill) {
