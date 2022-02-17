@@ -42,7 +42,7 @@ export abstract class Entity {
   /**
    * Used to be overwritten by your own workings
    */
-  onUpdate() {}
+  onUpdate(): boolean | void {}
 
   /**
    * Used to be overwritten by your own workings
@@ -60,7 +60,7 @@ export abstract class Entity {
       this.transmit("setup")
       this._isSetup = true
     } else {
-      throw new Error(`${this.constructor.name} is already setup`)
+      console.warn(`${this.constructor.name} is already setup`)
     }
   }
 
@@ -71,12 +71,9 @@ export abstract class Entity {
   public update() {
     Entity.frameCount++
     if (this.isSetup) {
-      this.onUpdate()
-      this.transmit("update")
+      if (this.onUpdate() !== false) this.transmit("update")
     } else {
-      throw new Error(
-        `update is called before setup in ${this.constructor.name}`
-      )
+      console.warn(`update is called before setup in ${this.constructor.name}`)
     }
   }
 
@@ -86,13 +83,12 @@ export abstract class Entity {
    */
   public teardown() {
     if (this.isSetup) {
-      this.stopTransmission("update")
       this._isSetup = false
       this.onTeardown()
       this._parent?.removeChild(this)
       this.transmit("teardown")
     } else {
-      throw new Error(
+      console.warn(
         `teardown is called before setup in ${this.constructor.name}`
       )
     }

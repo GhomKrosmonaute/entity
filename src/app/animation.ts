@@ -33,6 +33,7 @@ export class Animation extends Entity {
   onUpdate() {
     if (Entity.frameCount - this._startFrame >= this.settings.duration) {
       this.teardown()
+      return false
     } else {
       this.settings.onUpdate?.(
         map(
