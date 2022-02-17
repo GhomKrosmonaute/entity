@@ -61,7 +61,7 @@ export abstract class Entity {
       this.transmit("setup")
       this._isSetup = true
     } else {
-      throw new Error("Entity is already setup")
+      throw new Error(`${this.constructor.name} is already setup`)
     }
   }
 
@@ -75,7 +75,9 @@ export abstract class Entity {
       this.onUpdate()
       this.transmit("update")
     } else {
-      throw new Error("update is called before setup")
+      throw new Error(
+        `update is called before setup in ${this.constructor.name}`
+      )
     }
   }
 
@@ -90,7 +92,7 @@ export abstract class Entity {
       this._parent?.removeChild(this)
       this.transmit("teardown")
     } else {
-      throw new Error("Entity must be setup before")
+      throw new Error(`${this.constructor.name} must be setup before`)
     }
   }
 

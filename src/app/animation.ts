@@ -28,8 +28,6 @@ export class Animation extends Entity {
 
   onSetup() {
     this.settings.onSetup?.()
-    super.onSetup()
-    this.settings.onUpdate?.(this.settings.from)
   }
 
   onUpdate() {
@@ -51,7 +49,6 @@ export class Animation extends Entity {
   }
 
   onTeardown() {
-    this.settings.onUpdate?.(this.settings.to)
     this.settings.onTeardown?.()
   }
 }
