@@ -6,13 +6,11 @@ export class Sequence extends Entity {
 
   constructor(private list: EntityResolvable[]) {
     super()
-  }
 
-  onSetup() {
     this.next()
   }
 
-  next() {
+  private next() {
     if (this.list.length >= this.index) {
       this.teardown()
     } else {
