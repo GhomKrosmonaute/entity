@@ -38,7 +38,6 @@ export class Base extends Entity {
    * Should not be overwritten!
    */
   public draw() {
-    Entity.frameCount++
     if (this.isSetup) {
       this.onDraw()
       this.transmit("draw")
