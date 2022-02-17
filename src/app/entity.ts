@@ -75,7 +75,7 @@ export abstract class Entity {
       this.onUpdate()
       this.transmit("update")
     } else {
-      console.warn("update is called before setup")
+      throw new Error("update is called before setup")
     }
   }
 
