@@ -38,11 +38,12 @@ export class Base extends Entity {
    * Should not be overwritten!
    */
   public draw() {
+    Entity.frameCount++
     if (this.isSetup) {
       this.onDraw()
       this.transmit("draw")
     } else {
-      console.warn("Draw is called before setup")
+      throw new Error("draw is called before setup")
     }
   }
 
@@ -55,7 +56,7 @@ export class Base extends Entity {
       this.onMousePressed()
       this.transmit("mousePressed")
     } else {
-      console.warn("mousePressed is called before setup")
+      throw new Error("mousePressed is called before setup")
     }
   }
 
@@ -68,7 +69,7 @@ export class Base extends Entity {
       this.onMouseReleased()
       this.transmit("mouseReleased")
     } else {
-      console.warn("mousePressed is called before setup")
+      throw new Error("mousePressed is called before setup")
     }
   }
 
@@ -81,7 +82,7 @@ export class Base extends Entity {
       this.onKeyPressed()
       this.transmit("keyPressed")
     } else {
-      console.warn("keyPressed is called before setup")
+      throw new Error("keyPressed is called before setup")
     }
   }
 
@@ -94,7 +95,7 @@ export class Base extends Entity {
       this.onKeyReleased()
       this.transmit("keyReleased")
     } else {
-      console.warn("keyReleased is called before setup")
+      throw new Error("keyReleased is called before setup")
     }
   }
 }
