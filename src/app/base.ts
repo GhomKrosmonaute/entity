@@ -42,7 +42,7 @@ export class Base extends Entity {
       this.onDraw()
       this.transmit("draw")
     } else {
-      throw new Error("draw is called before setup")
+      throw new Error(`draw is called before setup in ${this.constructor.name}`)
     }
   }
 
@@ -55,7 +55,9 @@ export class Base extends Entity {
       this.onMousePressed()
       this.transmit("mousePressed")
     } else {
-      throw new Error("mousePressed is called before setup")
+      throw new Error(
+        `mousePressed is called before setup in ${this.constructor.name}`
+      )
     }
   }
 
@@ -68,7 +70,9 @@ export class Base extends Entity {
       this.onMouseReleased()
       this.transmit("mouseReleased")
     } else {
-      throw new Error("mousePressed is called before setup")
+      throw new Error(
+        `mouseReleased is called before setup in ${this.constructor.name}`
+      )
     }
   }
 
@@ -81,7 +85,9 @@ export class Base extends Entity {
       this.onKeyPressed()
       this.transmit("keyPressed")
     } else {
-      throw new Error("keyPressed is called before setup")
+      throw new Error(
+        `keyPressed is called before setup in ${this.constructor.name}`
+      )
     }
   }
 
@@ -94,7 +100,9 @@ export class Base extends Entity {
       this.onKeyReleased()
       this.transmit("keyReleased")
     } else {
-      throw new Error("keyReleased is called before setup")
+      throw new Error(
+        `keyReleased is called before setup in ${this.constructor.name}`
+      )
     }
   }
 }
