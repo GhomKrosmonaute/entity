@@ -1,5 +1,5 @@
 import * as p5 from "p5"
-import { Entity } from "./entity"
+import { Entity } from "@ghom/entity-base"
 
 export interface DrawableSettings {
   fill: false | FillOptions
@@ -16,7 +16,7 @@ export abstract class Drawable extends Entity {
     super()
   }
 
-  onDraw() {
+  onSetup() {
     if (!this.settings) return
 
     if (this.settings.fill) {

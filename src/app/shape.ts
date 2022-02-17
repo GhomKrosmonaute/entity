@@ -45,8 +45,8 @@ export class Rect extends Shape {
     )
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     rect(this.x, this.y, this.width, this.height)
   }
 }
@@ -81,8 +81,8 @@ export class Circle extends Shape {
     return dist(mouseX, mouseY, this.x, this.y) < this.diameter / 2
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     circle(this.x, this.y, this.diameter)
   }
 }
@@ -104,8 +104,8 @@ export class Ellipse extends Rect {
     )
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     ellipse(this.x, this.y, this.width, this.height)
   }
 }
@@ -149,8 +149,8 @@ export class Line extends Shape {
     )
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     line(this.x, this.y, this.x2, this.y2)
   }
 }
@@ -167,8 +167,8 @@ export class Image extends Rect {
     super(x, y, width ?? img.width, height ?? img.height, options)
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     image(this.img, this.x, this.y, this.width, this.height)
   }
 }
@@ -214,8 +214,8 @@ export class Text extends Shape {
     )
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     text(this.text, this.x, this.y, this._width, this._height)
   }
 }
