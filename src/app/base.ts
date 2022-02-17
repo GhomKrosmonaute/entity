@@ -4,6 +4,12 @@ export class Base extends Entity {
   protected _children = new Set<Entity>()
   protected _zIndex?: number
 
+  constructor() {
+    super()
+
+    this.on("teardown", () => this.stopTransmission("draw"))
+  }
+
   get zIndex(): number {
     return this._zIndex ?? this.parent?.children.indexOf(this) ?? 0
   }
