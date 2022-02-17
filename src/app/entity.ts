@@ -18,6 +18,10 @@ export abstract class Entity {
   protected _listeners: EntityListener<this>[] = []
   protected _stopPoints: Record<string, boolean> = {}
 
+  get frameCount() {
+    return Entity.frameCount - this._startFrame
+  }
+
   get isSetup() {
     return this._isSetup
   }
@@ -29,11 +33,6 @@ export abstract class Entity {
   get parent(): Entity | undefined {
     return this._parent
   }
-
-  /**
-   * Represent any state-based entity
-   */
-  protected constructor() {}
 
   /**
    * Used to be overwritten by your own workings
@@ -87,12 +86,15 @@ export abstract class Entity {
    */
   public teardown() {
     if (this.isSetup) {
+      this.stopTransmission("update")
       this._isSetup = false
       this.onTeardown()
       this._parent?.removeChild(this)
       this.transmit("teardown")
     } else {
-      throw new Error(`${this.constructor.name} must be setup before`)
+      throw new Error(
+        `teardown is called before setup in ${this.constructor.name}`
+      )
     }
   }
 
@@ -153,7 +155,7 @@ export abstract class Entity {
   ): string {
     return `${" ".repeat(indentation).repeat(depth)}${
       index === null ? "" : `${index} - `
-    }${this.constructor.name}${
+    }${this.constructor.name} [${this.frameCount} frames] ${
       this._children.size > 0
         ? ` (children: ${this.children.length})${
             this._listeners.length > 0
