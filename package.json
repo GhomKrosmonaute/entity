@@ -1,19 +1,22 @@
 {
   "name": "@ghom/entity-base",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "license": "MIT",
   "main": "src/index.ts",
-  "description": "TypeScript only package for entity based app using p5",
+  "description": "TypeScript only package for entity based app",
   "prettier": {
     "semi": false
   },
   "scripts": {
     "format": "prettier --write src tsconfig.*",
-    "test": "tsc --noEmit",
+    "test": "jest test.ts",
     "prepublishOnly": "npm run format && npm test"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "jest": "^27.5.1",
     "prettier": "^2.5.1",
+    "ts-jest": "^27.1.3",
     "typescript": "^4.5.5"
   },
   "dependencies": {

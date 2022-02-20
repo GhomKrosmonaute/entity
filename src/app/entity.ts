@@ -1,4 +1,4 @@
-import { BaseEventNames, EventEmitter, Listener } from "@ghom/event-emitter"
+import { EventEmitter } from "@ghom/event-emitter"
 
 export type EntityResolvable = Entity | (() => Entity)
 

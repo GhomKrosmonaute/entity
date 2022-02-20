@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "strict": true,
     "rootDir": "src",
-    "module": "commonjs",
+    "module": "ES2020",
     "target": "es2020",
     "lib": ["es2020", "dom"],
     "downlevelIteration": true,
+    "esModuleInterop": true,
     "noImplicitAny": true,
     "sourceMap": true
   }

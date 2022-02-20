@@ -2,7 +2,7 @@ import { Entity, EntityResolvable } from "./entity"
 
 export class Sequence extends Entity {
   private index = 0
-  private current: Entity
+  private current?: Entity
 
   constructor(private list: EntityResolvable[]) {
     super()
