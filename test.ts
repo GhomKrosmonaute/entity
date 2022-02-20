@@ -1,4 +1,4 @@
-import { Entity, Sequence, Animation } from "./src/index"
+import { Entity, Sequence, Animation } from "."
 
 class RootEntity extends Entity {
   constructor() {

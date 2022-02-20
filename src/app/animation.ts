@@ -6,7 +6,7 @@ export interface AnimationSettings {
   from: number
   to: number
   /**
-   * Animation duration in **frame count**!
+   * Animation duration **in frame count**!
    */
   duration: number
   easing?: EasingFunction
