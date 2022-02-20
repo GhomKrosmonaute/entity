@@ -10,17 +10,14 @@
   },
   "scripts": {
     "format": "prettier --write src tsconfig.*",
-    "test": "jest test.ts",
+    "test": "tsc --noEmit",
     "prepublishOnly": "npm run format && npm test"
   },
   "devDependencies": {
-    "@types/jest": "^27.4.0",
-    "jest": "^27.5.1",
     "prettier": "^2.5.1",
-    "ts-jest": "^27.1.3",
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "@ghom/event-emitter": "^1.0.0"
+    "@ghom/event-emitter": "^1.0.3"
   }
 }
