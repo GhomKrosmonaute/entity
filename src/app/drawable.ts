@@ -6,7 +6,7 @@ export interface DrawableSettings {
   stroke: false | StrokeOptions
   textSize?: number
   textAlign?: {
-    x?: p5.HORIZ_ALIGN
+    x: p5.HORIZ_ALIGN
     y?: p5.VERT_ALIGN
   }
 }

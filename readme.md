@@ -1,10 +1,10 @@
 # Entity p5
 
-TypeScript only package for entity based app using p5.js
+Suitable to be included in a bundle for Node and the browser for entity based app using p5.js
 
 ## Library usage
 
-Start from templte ? https://github.com/ESBuildTemplates/entity-p5.ts (recommended)
+Start from template ? [https://github.com/ESBuildTemplates/entity-p5.ts](ESBuildTemplates/entity-p5.ts) (recommended)
 
 ### Startup example
 
@@ -38,7 +38,7 @@ function setup() {
 }
 
 function draw() {
-  root.update()
+  root.update(true)
   root.draw()
 }
 ```

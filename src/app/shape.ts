@@ -194,13 +194,13 @@ export class Text extends Shape {
   }
 
   get centerX() {
-    return this.settings.textAlign.x === CENTER
+    return this.settings?.textAlign?.x === CENTER
       ? this.x
       : this.x + this.width / 2
   }
 
   get centerY() {
-    return this.settings.textAlign.y === CENTER
+    return this.settings?.textAlign?.y === CENTER
       ? this.y
       : this.y + this.height / 2
   }
