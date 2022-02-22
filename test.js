@@ -11,14 +11,14 @@ const anim2 = new Animation({
   from: 0,
   to: 1,
   duration: 3,
-  easing: easingSet.easeInBack,
+  easing: easingSet.easeInExpo,
 })
 
 const anim3 = new Animation({
   from: 0,
   to: 1,
   duration: 3,
-  easing: easingSet.easeInBack,
+  easing: easingSet.easeInBounce,
 })
 
 const sequence = new Sequence([anim1, anim2])
