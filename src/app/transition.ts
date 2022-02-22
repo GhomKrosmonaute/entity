@@ -13,7 +13,7 @@ export class Sequence extends Entity {
   }
 
   private next() {
-    if (this.list.length >= this.index) {
+    if (this.index >= this.list.length) {
       this.teardown()
     } else {
       this.current = Entity.resolve(this.list[this.index])

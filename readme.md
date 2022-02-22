@@ -1,3 +1,3 @@
-# Base Base
+# Entity Base
 
-Just a base for make an entity based state machine
+Suitable to be included in a bundle for Node and the browser for entity based app

@@ -4,6 +4,11 @@ export type EntityResolvable = Entity | (() => Entity)
 
 export abstract class Entity extends EventEmitter {
   static frameCount = 0
+
+  static addFrame() {
+    this.frameCount++
+  }
+
   static resolve(entity: EntityResolvable) {
     return typeof entity === "function" ? entity() : entity
   }
@@ -64,8 +69,8 @@ export abstract class Entity extends EventEmitter {
    * Should only be called if the current entity is a root.
    * Should not be overwritten!
    */
-  public update() {
-    Entity.frameCount++
+  public update(addFrame?: true) {
+    if (addFrame) Entity.addFrame()
     if (this.isSetup) {
       if (this.onUpdate() !== false) this.transmit("update")
     } else {

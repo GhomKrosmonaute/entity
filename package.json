@@ -1,23 +1,25 @@
 {
   "name": "@ghom/entity-base",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "license": "MIT",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "description": "TypeScript only package for entity based app",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "description": "Suitable to be included in a bundle for Node and the browser for entity based apps",
   "prettier": {
     "semi": false
   },
   "scripts": {
     "format": "prettier --write src tsconfig.*",
-    "test": "tsc --noEmit",
+    "build": "tsc",
+    "test": "npm run build && jest test.js",
     "prepublishOnly": "npm run format && npm test"
   },
   "devDependencies": {
     "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "jest": "^27.5.1"
   },
   "dependencies": {
-    "@ghom/event-emitter": "^1.0.3"
+    "@ghom/event-emitter": "^1.0.4"
   }
 }
