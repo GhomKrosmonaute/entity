@@ -1,4 +1,4 @@
-import { Entity } from "@ghom/entity-base"
+import { Entity } from "@ghom/entity"
 
 export class Base extends Entity {
   protected _zIndex?: number
