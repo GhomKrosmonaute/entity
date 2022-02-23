@@ -1,15 +1,6 @@
-const { Base } = require("./dist/index")
+const { ApplicationEntity } = require("./dist/index")
 
-const root = new Base()
-const child = new Base()
-
-root.addChild(child)
-
-test("setup", () => {
-  root.setup()
-  expect(child.isSetup).toBeTruthy()
-})
-
-afterAll(() => {
-  root.teardown()
+test("make app", (cb) => {
+  new ApplicationEntity()
+  cb()
 })

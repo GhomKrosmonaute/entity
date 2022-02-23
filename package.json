@@ -1,6 +1,6 @@
 {
   "name": "@ghom/entity-pixi",
-  "version": "1.0.21",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@ghom/entity": "^1.0.14",
-    "@types/pixi.js": "^5.0.0",
     "pixi.js": "^6.2.2"
   }
 }
