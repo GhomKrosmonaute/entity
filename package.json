@@ -1,5 +1,5 @@
 {
-  "name": "@ghom/entity-base",
+  "name": "@ghom/entity",
   "version": "1.0.14",
   "license": "MIT",
   "main": "dist/index.js",
