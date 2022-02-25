@@ -4,7 +4,7 @@ Suitable to be included in a bundle for Node and the browser for entity based ap
 
 ## Some specifics
 
-- [@ghom/entity-pixi](https://github.com/GhomKrosmonaute/entity/tree/%40ghom/entity-pixi) for [PixiJS](https://github.com/pixijs/pixijs)
+- [@ghom/entity-pixi](https://github.com/GhomKrosmonaute/entity/tree/%40ghom/entity-pixi) for [PixiJS](https://github.com/pixijs/pixijs) *WIP*
 - [@ghom/entity-p5](https://github.com/GhomKrosmonaute/entity/tree/%40ghom/entity-p5) for [p5.js](https://github.com/processing/p5.js)
 
 ## Annexes
