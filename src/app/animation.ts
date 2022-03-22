@@ -12,6 +12,7 @@ export interface AnimationSettings {
   easing?: EasingFunction
   onSetup?: () => unknown
   onUpdate?: (value: number) => unknown
+  afterUpdate?: (value: number) => unknown
   onTeardown?: () => unknown
 }
 
@@ -31,25 +32,40 @@ export class Animation extends Entity {
   }
 
   onUpdate() {
-    if (Entity.frameCount - this._startFrame >= this.settings.duration) {
+    if (this.isFinish) {
       this.teardown()
       return false
     } else {
-      this.settings.onUpdate?.(
-        map(
-          this.easing(
-            (Entity.frameCount - this._startFrame) / this.settings.duration
-          ),
-          0,
-          1,
-          this.settings.from,
-          this.settings.to
-        )
-      )
+      this.settings.onUpdate?.(this.value)
+    }
+  }
+
+  afterUpdate() {
+    if (this.isFinish) {
+      this.teardown()
+      return false
+    } else {
+      this.settings.afterUpdate?.(this.value)
     }
   }
 
   onTeardown() {
     this.settings.onTeardown?.()
+  }
+
+  get isFinish() {
+    return Entity.frameCount - this._startFrame >= this.settings.duration
+  }
+
+  get value() {
+    return map(
+      this.easing(
+        (Entity.frameCount - this._startFrame) / this.settings.duration
+      ),
+      0,
+      1,
+      this.settings.from,
+      this.settings.to
+    )
   }
 }

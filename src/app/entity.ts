@@ -48,6 +48,11 @@ export abstract class Entity extends EventEmitter {
   /**
    * Used to be overwritten by your own workings
    */
+  afterUpdate() {}
+
+  /**
+   * Used to be overwritten by your own workings
+   */
   onTeardown() {}
 
   /**
@@ -72,7 +77,10 @@ export abstract class Entity extends EventEmitter {
   public update(addFrame?: true) {
     if (addFrame) Entity.addFrame()
     if (this.isSetup) {
-      if (this.onUpdate() !== false) this.transmit("update")
+      if (this.onUpdate() !== false) {
+        this.transmit("update")
+        this.afterUpdate()
+      }
     } else {
       console.warn(`update is called before setup in ${this.constructor.name}`)
     }
