@@ -1,6 +1,6 @@
 {
   "name": "@ghom/entity-p5",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,12 +16,12 @@
   },
   "devDependencies": {
     "jest": "^27.5.1",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "prettier": "^2.6.0",
+    "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@ghom/entity": "^1.0.15",
-    "@types/p5": "^1.4.0",
+    "@ghom/entity": "^1.0.17",
+    "@types/p5": "^1.4.1",
     "p5": "^1.4.1"
   }
 }
