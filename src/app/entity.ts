@@ -53,6 +53,11 @@ export abstract class Entity extends EventEmitter {
   /**
    * Used to be overwritten by your own workings
    */
+  afterParentUpdate() {}
+
+  /**
+   * Used to be overwritten by your own workings
+   */
   onTeardown() {}
 
   /**
@@ -79,6 +84,9 @@ export abstract class Entity extends EventEmitter {
     if (this.isSetup) {
       if (this.onUpdate() !== false) {
         this.transmit("update")
+        this.children.forEach((child) => {
+          if (child.isSetup) child.afterParentUpdate()
+        })
         this.afterUpdate()
       }
     } else {

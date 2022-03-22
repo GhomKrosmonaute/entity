@@ -40,7 +40,7 @@ export class Animation extends Entity {
     }
   }
 
-  afterUpdate() {
+  afterParentUpdate() {
     if (this.isFinish) {
       this.teardown()
       return false
