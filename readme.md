@@ -23,12 +23,11 @@ function setup() {
   const myRect = new Rect(
     x, y,
     width,
-    height,
-    {
-      stroke: false,
-      fill: color("red")
-    }
-  )
+    height
+  ).setStyle(() => {
+    noStroke()
+    fill("red")
+  })
   
   // add my rect to root entity children.
   // my rect will drawn/setup/update/teardown at same time of root.
@@ -45,7 +44,7 @@ function draw() {
 
 ### Example with heritage
 
-The following class uses the onDraw method of her parent.  
+The following class uses the onUpdate method of her parent.  
 The onDraw method is already implemented in some entities. 
 
 ```ts
@@ -57,23 +56,33 @@ import { Entity, Circle } from "@ghom/entity-p5"
  */
 export class ClickableBalloon extends Circle {
   constructor() {
-    super(random(0, width), random(0, height), random(40, 60), {
-      fill: color(random(100, 200), random(100, 200), random(100, 200)),
-      stroke: false,
+    super(
+      random(0, width),  // x
+      random(0, height), // y
+      random(40, 60)     // diameter
+    )
+  }
+
+  /**
+   * Setup dynamic styles
+   */
+  onSetup() {
+    this.setStyle(() => {
+      fill(
+        random(100, 200), // red
+        random(100, 200), // green
+        random(100, 200)  // blue
+      )
+      if(this.isHovered) {
+        stroke(255)
+        strokeWeight(5)
+      } else noStroke()
     })
   }
 
-  onUpdate() {
-    if (this.isHovered) {
-      this.settings.stroke = {
-        color: color(255),
-        weight: 5,
-      }
-    } else {
-      this.settings.stroke = false
-    }
-  }
-
+  /**
+   * Prevent the user from being able to click on multiple balloons at the same time
+   */
   onMouseReleased() {
     if (this.isHovered) {
       if (this.parent.children.length > 1)
@@ -95,7 +104,7 @@ export class Balloons extends Entity {
 
   onSetup() {
     for (let i = 0; i < this.count; i++) {
-      this.addChild(new Balloon())
+      this.addChild(new ClickableBalloon())
     }
   }
 }

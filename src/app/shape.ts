@@ -1,31 +1,82 @@
 import * as p5 from "p5"
-import { Drawable, DrawableSettings } from "./drawable"
+import { Base } from "./base"
 
-export abstract class Shape
-  extends Drawable
-  implements Positionable, Resizable
-{
-  abstract x: number
-  abstract y: number
-  abstract width: number
-  abstract height: number
-  abstract readonly centerX: number
-  abstract readonly centerY: number
+export abstract class Shape extends Base {
+  style?: () => unknown
+  scaleX = 1
+  scaleY = 1
+  anchorX = 0
+  anchorY = 0
+  abstract _x: number
+  abstract _y: number
+  abstract _width: number
+  abstract _height: number
+  abstract get centerX(): number
+  abstract get centerY(): number
+  abstract readonly isHovered: boolean
 
-  get center(): [x: number, y: number] {
+  get x() {
+    return this._x + this.anchorX
+  }
+
+  get y() {
+    return this._y + this.anchorY
+  }
+
+  get width() {
+    return this._width * this.scaleX
+  }
+
+  get height() {
+    return this._height * this.scaleY
+  }
+
+  get center() {
+    return createVector(this.centerX, this.centerY)
+  }
+
+  get position() {
+    return createVector(this.x, this.y)
+  }
+
+  get size() {
+    return createVector(this.width, this.height)
+  }
+
+  get centerDuple(): [x: number, y: number] {
     return [this.centerX, this.centerY]
+  }
+
+  get positionDuple(): [x: number, y: number] {
+    return [this.x, this.y]
+  }
+
+  get sizeDuple(): [w: number, h: number] {
+    return [this.width, this.height]
+  }
+
+  setStyle(style: () => unknown) {
+    this.style = style
+    return this
+  }
+
+  onUpdate() {
+    this.style?.()
   }
 }
 
 export class Rect extends Shape {
   constructor(
-    public x = 0,
-    public y = 0,
-    public width = 0,
-    public height = 0,
-    options?: DrawableSettings
+    public _x: number,
+    public _y: number,
+    public _width: number,
+    public _height: number,
+    public tl?: number,
+    public tr?: number,
+    public br?: number,
+    public bl?: number
   ) {
-    super(options)
+    super()
   }
 
   get centerX() {
@@ -45,27 +96,31 @@ export class Rect extends Shape {
     )
   }
 
-  onDraw() {
-    super.onDraw()
-    rect(this.x, this.y, this.width, this.height)
+  onUpdate() {
+    super.onUpdate()
+    rect(
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+      this.tl ? this.tl * ((this.scaleX + this.scaleY) / 2) : undefined,
+      this.tr ? this.tr * ((this.scaleX + this.scaleY) / 2) : undefined,
+      this.br ? this.br * ((this.scaleX + this.scaleY) / 2) : undefined,
+      this.bl ? this.bl * ((this.scaleX + this.scaleY) / 2) : undefined
+    )
   }
 }
 
 export class Circle extends Shape {
-  constructor(
-    public x = 0,
-    public y = 0,
-    public diameter = 0,
-    options?: DrawableSettings
-  ) {
-    super(options)
+  constructor(public _x: number, public _y: number, public diameter: number) {
+    super()
   }
 
-  get width() {
+  get _width() {
     return this.diameter
   }
 
-  get height() {
+  get _height() {
     return this.diameter
   }
 
@@ -81,13 +136,26 @@ export class Circle extends Shape {
     return dist(mouseX, mouseY, this.x, this.y) < this.diameter / 2
   }
 
-  onDraw() {
-    super.onDraw()
-    circle(this.x, this.y, this.diameter)
+  onUpdate() {
+    super.onUpdate()
+    circle(this.x, this.y, this.width)
   }
 }
 
-export class Ellipse extends Rect {
+export class Ellipse extends Shape {
+  constructor(
+    public _x: number,
+    public _y: number,
+    public _width: number,
+    public __height?: number
+  ) {
+    super()
+  }
+
+  get _height(): number {
+    return this.__height ?? this._width
+  }
+
   get centerX() {
     return this.x
   }
@@ -104,33 +172,27 @@ export class Ellipse extends Rect {
     )
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     ellipse(this.x, this.y, this.width, this.height)
   }
 }
 
 export class Line extends Shape {
-  constructor(
-    public x = 0,
-    public y = 0,
-    public x2 = 0,
-    public y2 = 0,
-    options?: DrawableSettings
-  ) {
-    super(options)
+  constructor(public _x = 0, public _y = 0, public x2 = 0, public y2 = 0) {
+    super()
   }
 
-  get width() {
-    return this.x2 - this.x
+  get _width() {
+    return this.x2 - this._x
   }
 
-  get height() {
-    return this.y2 - this.y
+  get _height() {
+    return this.y2 - this._y
   }
 
-  get size() {
-    return dist(this.x, this.y, this.x2, this.y2)
+  get length() {
+    return dist(this.x, this.y, this.x + this.width, this.y + this.height)
   }
 
   get centerX() {
@@ -144,78 +206,84 @@ export class Line extends Shape {
   get isHovered(): boolean {
     return (
       dist(this.x, this.y, mouseX, mouseY) +
-        dist(mouseX, mouseY, this.x2, this.y2) <=
-      this.size
+        dist(mouseX, mouseY, this.x + this.width, this.y + this.height) <=
+      this.length
     )
   }
 
-  onDraw() {
-    super.onDraw()
-    line(this.x, this.y, this.x2, this.y2)
+  onUpdate() {
+    super.onUpdate()
+    line(this.x, this.y, this.x + this.width, this.y + this.height)
   }
 }
 
 export class Image extends Rect {
   constructor(
     public img: p5.Image,
-    public x = 0,
-    public y = 0,
+    x = 0,
+    y = 0,
     width?: number,
-    height?: number,
-    options?: DrawableSettings
+    height?: number
   ) {
-    super(x, y, width ?? img.width, height ?? img.height, options)
+    super(x, y, width ?? img.width, height ?? img.height)
   }
 
-  onDraw() {
-    super.onDraw()
+  onUpdate() {
+    super.onUpdate()
     image(this.img, this.x, this.y, this.width, this.height)
   }
 }
 
 export class Text extends Shape {
+  dynamicWidth = 0
+  dynamicHeight = 0
+
   constructor(
     public text = "",
-    public x = 0,
-    public y = 0,
-    public _width?: number,
-    public _height?: number,
-    options?: DrawableSettings
+    public _x = 0,
+    public _y = 0,
+    public __width?: number,
+    public __height?: number
   ) {
-    super(options)
+    super()
   }
 
-  get width(): number {
-    return this._width ?? Infinity
+  get _width(): number {
+    return this.__width ?? this.dynamicWidth
   }
 
-  get height(): number {
-    return this._height ?? Infinity
+  get _height(): number {
+    return this.__height ?? this.dynamicHeight
   }
 
   get centerX() {
-    return this.settings?.textAlign?.x === CENTER
-      ? this.x
-      : this.x + this.width / 2
+    return this.x + this.width / 2
   }
 
   get centerY() {
-    return this.settings?.textAlign?.y === CENTER
-      ? this.y
-      : this.y + this.height / 2
+    return this.y + this.height / 2
   }
 
   get isHovered(): boolean {
     return (
-      mouseX > this.centerX - width / 10 &&
-      mouseX < this.centerX + width / 10 &&
-      mouseY > this.centerY - height / 10 &&
-      mouseY < this.centerX + height / 10
+      mouseX > this.centerX - this.width / 2 &&
+      mouseX < this.centerX + this.width / 2 &&
+      mouseY > this.centerY - this.height / 2 &&
+      mouseY < this.centerX + this.height / 2
     )
   }
 
-  onDraw() {
-    super.onDraw()
-    text(this.text, this.x, this.y, this._width, this._height)
+  onUpdate() {
+    super.onUpdate()
+    const font = textFont() as p5.Font
+    const bounds = font.textBounds(this.text, this.x, this.y, textSize()) as {
+      x: number
+      y: number
+      w: number
+      h: number
+    }
+    this.dynamicWidth = bounds.w
+    this.dynamicHeight = bounds.h
+    text(this.text, this.x, this.y, this.width, this.height)
   }
 }
