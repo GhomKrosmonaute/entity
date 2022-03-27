@@ -1,6 +1,6 @@
 {
   "name": "@ghom/entity-pixi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,20 +8,27 @@
   "prettier": {
     "semi": false
   },
+  "jest": {
+    "setupFiles": [
+      "./tests/setup.js"
+    ]
+  },
   "scripts": {
     "format": "prettier --write src tsconfig.*",
     "build": "tsc",
-    "test": "npm run build && jest test.js",
+    "test": "npm run build && jest tests/test.js",
     "prepublishOnly": "npm run format && npm test"
   },
   "devDependencies": {
     "@types/offscreencanvas": "^2019.6.4",
     "jest": "^27.5.1",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "prettier": "^2.6.1",
+    "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@ghom/entity": "^1.0.14",
-    "pixi.js": "^6.2.2"
+    "@ghom/entity": "^1.0.18",
+    "canvas": "^2.9.1",
+    "gl": "^5.0.0",
+    "pixi.js": "^6.3.0"
   }
 }
